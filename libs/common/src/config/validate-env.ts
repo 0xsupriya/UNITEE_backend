@@ -7,5 +7,5 @@ export const validateEnv: ConfigFactory = () => {
        console.error('Invalid environment variables:', parse.error.format());
     process.exit(1);
     }
-    return parse.data
+    return parse.data;
 }
