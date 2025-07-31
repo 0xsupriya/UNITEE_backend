@@ -5,6 +5,9 @@ export class userEntity{
     @PrimaryGeneratedColumn('uuid')
     id: String
 
+    @Column()
+    name: String
+
     @Column({unique: true})
     email: String
 
