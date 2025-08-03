@@ -18,7 +18,7 @@ export class AuthService {
     const userExists = await this.userRepo.findOne({ where: { email: dto.email } });
     if (userExists) throw new ForbiddenException('Email already registered');
 
-    const hashedPassword = await bcrypt.hash(dto.password.toString(), 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     const newUser = this.userRepo.create({
       name: dto.name,
@@ -27,17 +27,17 @@ export class AuthService {
     });
 
     const savedUser = await this.userRepo.save(newUser);
-    return this.signToken(savedUser.id.toString(), savedUser.email.toString());
+    return this.signToken(savedUser.id, savedUser.email);
   }
 
   async signin(dto: signInDto) {
     const user = await this.userRepo.findOne({ where: { email: dto.email } });
     if (!user) throw new ForbiddenException('Invalid credentials');
 
-    const passwordMatches = await bcrypt.compare(dto.password.toString(), user.password.toString());
+    const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Invalid credentials');
 
-    return this.signToken(user.id.toString(), user.email.toString());
+    return this.signToken(user.id, user.email);
   }
 
   async signToken(userId: string, email: string): Promise<{ access_token: string }> {
