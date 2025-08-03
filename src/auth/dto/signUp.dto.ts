@@ -1,11 +1,11 @@
 import {IsEmail, IsNotEmpty, MinLength} from 'class-validator'
 export class signUpDto{
     @IsEmail()
-    email: String
+    email: string
 
     @IsNotEmpty()
-    name: String
+    name: string
 
     @MinLength(10)
-    password: String
+    password: string
 }
