@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, ForbiddenException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { userEntity } from '../../libs/db/entities/user.entity';
+import { signUpDto } from './dto/signUp.dto';
+import { signInDto } from './dto/signIn.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(userEntity) private userRepo: Repository<userEntity>,
+    private jwtService: JwtService,
+  ) {}
+
+  async signup(dto: signUpDto) {
+    const userExists = await this.userRepo.findOne({ where: { email: dto.email } });
+    if (userExists) throw new ForbiddenException('Email already registered');
+
+    const hashedPassword = await bcrypt.hash(dto.password.toString(), 10);
+
+    const newUser = this.userRepo.create({
+      name: dto.name,
+      email: dto.email,
+      password: hashedPassword,
+    });
+
+    const savedUser = await this.userRepo.save(newUser);
+    return this.signToken(savedUser.id.toString(), savedUser.email.toString());
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async signin(dto: signInDto) {
+    const user = await this.userRepo.findOne({ where: { email: dto.email } });
+    if (!user) throw new ForbiddenException('Invalid credentials');
+
+    const passwordMatches = await bcrypt.compare(dto.password.toString(), user.password.toString());
+    if (!passwordMatches) throw new ForbiddenException('Invalid credentials');
+
+    return this.signToken(user.id.toString(), user.email.toString());
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  async signToken(userId: string, email: string): Promise<{ access_token: string }> {
+    const payload = { sub: userId, email };
+    const token = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '15m',
+    });
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return { access_token: token };
   }
 }
