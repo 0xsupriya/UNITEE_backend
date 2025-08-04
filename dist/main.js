@@ -126,7 +126,7 @@ const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const app_controller_1 = __webpack_require__(/*! ./app.controller */ "./src/app.controller.ts");
 const app_service_1 = __webpack_require__(/*! ./app.service */ "./src/app.service.ts");
 const auth_module_1 = __webpack_require__(/*! ./auth/auth.module */ "./src/auth/auth.module.ts");
-const userProfile_module_1 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module './userProfile/userProfile.module'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const user_profile_module_1 = __webpack_require__(/*! ./user-profile/user-profile.module */ "./src/user-profile/user-profile.module.ts");
 const collab_module_1 = __webpack_require__(/*! ./collab/collab.module */ "./src/collab/collab.module.ts");
 const explore_module_1 = __webpack_require__(/*! ./explore/explore.module */ "./src/explore/explore.module.ts");
 let AppModule = class AppModule {
@@ -134,7 +134,7 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, explore_module_1.ExploreModule, collab_module_1.CollabModule, userProfile_module_1.UserProfileModule],
+        imports: [auth_module_1.AuthModule, explore_module_1.ExploreModule, collab_module_1.CollabModule, user_profile_module_1.UserProfileModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
@@ -863,6 +863,203 @@ exports.ExploreService = ExploreService = __decorate([
 
 /***/ }),
 
+/***/ "./src/user-profile/dto/create-user-profile.dto.ts":
+/*!*********************************************************!*\
+  !*** ./src/user-profile/dto/create-user-profile.dto.ts ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateUserProfileDto = void 0;
+class CreateUserProfileDto {
+}
+exports.CreateUserProfileDto = CreateUserProfileDto;
+
+
+/***/ }),
+
+/***/ "./src/user-profile/dto/update-user-profile.dto.ts":
+/*!*********************************************************!*\
+  !*** ./src/user-profile/dto/update-user-profile.dto.ts ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateUserProfileDto = void 0;
+const mapped_types_1 = __webpack_require__(/*! @nestjs/mapped-types */ "@nestjs/mapped-types");
+const create_user_profile_dto_1 = __webpack_require__(/*! ./create-user-profile.dto */ "./src/user-profile/dto/create-user-profile.dto.ts");
+class UpdateUserProfileDto extends (0, mapped_types_1.PartialType)(create_user_profile_dto_1.CreateUserProfileDto) {
+}
+exports.UpdateUserProfileDto = UpdateUserProfileDto;
+
+
+/***/ }),
+
+/***/ "./src/user-profile/user-profile.controller.ts":
+/*!*****************************************************!*\
+  !*** ./src/user-profile/user-profile.controller.ts ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserProfileController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const user_profile_service_1 = __webpack_require__(/*! ./user-profile.service */ "./src/user-profile/user-profile.service.ts");
+const create_user_profile_dto_1 = __webpack_require__(/*! ./dto/create-user-profile.dto */ "./src/user-profile/dto/create-user-profile.dto.ts");
+const update_user_profile_dto_1 = __webpack_require__(/*! ./dto/update-user-profile.dto */ "./src/user-profile/dto/update-user-profile.dto.ts");
+let UserProfileController = class UserProfileController {
+    userProfileService;
+    constructor(userProfileService) {
+        this.userProfileService = userProfileService;
+    }
+    create(createUserProfileDto) {
+        return this.userProfileService.create(createUserProfileDto);
+    }
+    findAll() {
+        return this.userProfileService.findAll();
+    }
+    findOne(id) {
+        return this.userProfileService.findOne(+id);
+    }
+    update(id, updateUserProfileDto) {
+        return this.userProfileService.update(+id, updateUserProfileDto);
+    }
+    remove(id) {
+        return this.userProfileService.remove(+id);
+    }
+};
+exports.UserProfileController = UserProfileController;
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof create_user_profile_dto_1.CreateUserProfileDto !== "undefined" && create_user_profile_dto_1.CreateUserProfileDto) === "function" ? _b : Object]),
+    __metadata("design:returntype", void 0)
+], UserProfileController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UserProfileController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserProfileController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_c = typeof update_user_profile_dto_1.UpdateUserProfileDto !== "undefined" && update_user_profile_dto_1.UpdateUserProfileDto) === "function" ? _c : Object]),
+    __metadata("design:returntype", void 0)
+], UserProfileController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserProfileController.prototype, "remove", null);
+exports.UserProfileController = UserProfileController = __decorate([
+    (0, common_1.Controller)('user-profile'),
+    __metadata("design:paramtypes", [typeof (_a = typeof user_profile_service_1.UserProfileService !== "undefined" && user_profile_service_1.UserProfileService) === "function" ? _a : Object])
+], UserProfileController);
+
+
+/***/ }),
+
+/***/ "./src/user-profile/user-profile.module.ts":
+/*!*************************************************!*\
+  !*** ./src/user-profile/user-profile.module.ts ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserProfileModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const user_profile_service_1 = __webpack_require__(/*! ./user-profile.service */ "./src/user-profile/user-profile.service.ts");
+const user_profile_controller_1 = __webpack_require__(/*! ./user-profile.controller */ "./src/user-profile/user-profile.controller.ts");
+let UserProfileModule = class UserProfileModule {
+};
+exports.UserProfileModule = UserProfileModule;
+exports.UserProfileModule = UserProfileModule = __decorate([
+    (0, common_1.Module)({
+        controllers: [user_profile_controller_1.UserProfileController],
+        providers: [user_profile_service_1.UserProfileService],
+    })
+], UserProfileModule);
+
+
+/***/ }),
+
+/***/ "./src/user-profile/user-profile.service.ts":
+/*!**************************************************!*\
+  !*** ./src/user-profile/user-profile.service.ts ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserProfileService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+let UserProfileService = class UserProfileService {
+    create(createUserProfileDto) {
+        return 'This action adds a new userProfile';
+    }
+    findAll() {
+        return `This action returns all userProfile`;
+    }
+    findOne(id) {
+        return `This action returns a #${id} userProfile`;
+    }
+    update(id, updateUserProfileDto) {
+        return `This action updates a #${id} userProfile`;
+    }
+    remove(id) {
+        return `This action removes a #${id} userProfile`;
+    }
+};
+exports.UserProfileService = UserProfileService;
+exports.UserProfileService = UserProfileService = __decorate([
+    (0, common_1.Injectable)()
+], UserProfileService);
+
+
+/***/ }),
+
 /***/ "@nestjs/common":
 /*!*********************************!*\
   !*** external "@nestjs/common" ***!
@@ -1003,7 +1200,7 @@ const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
 const app_module_1 = __webpack_require__(/*! ./app.module */ "./src/app.module.ts");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(process.env.PORT ?? 4000);
 }
 bootstrap();
 
