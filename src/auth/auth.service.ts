@@ -6,7 +6,6 @@ import { userEntity } from "libs/db/entities/user.entity";
 import { SignUpDto } from "./dto/signUp.dto";
 import { JwtService } from "@nestjs/jwt";
 import { SignInDto } from "./dto/signIn.dto";
-import { th } from "zod/v4/locales/index.cjs";
 
 @Injectable()
 export class AuthService{
