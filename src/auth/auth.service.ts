@@ -41,11 +41,11 @@ export class AuthService{
   async signIn(signInDto: SignInDto){
     // 1. Find by email
     const user = await this.userRepo.findOne({where: {email: signInDto.email}});
-    if(!user) throw new BadRequestException("Email is already in use");
+    if(!user) throw new BadRequestException("User not found");
 
-    // 2. Compared password
+    // 2. Compare password
     const isMatch = await bcrypt.compare(signInDto.password, user.password);
-    if(isMatch) throw new BadRequestException("Invalid Credentials");
+    if(!isMatch) throw new BadRequestException("Invalid Credentials");
 
     // 3. Create JWT token
     const token = this.jwt.sign({id: user.id, email: user.email});

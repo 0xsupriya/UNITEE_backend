@@ -1,13 +1,15 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
-import { databaseConfig } from "../config";
+import { databaseConfig, validateEnv } from "../config";
 import {ThrottlerModule} from '@nestjs/throttler';
+
 @Module({
     imports: [
         // Global configuration module
         ConfigModule.forRoot({
             isGlobal: true,
+            validate: validateEnv,
             load: [databaseConfig]
         }),
 
