@@ -3,19 +3,18 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Read token from "Authorization: Bearer <token>"
-      secretOrKey: process.env.JWT_SECRET || 'supersceret',     // Secret used to sign the token
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET || 'supersceret',
     });
   }
 
-  // Automatically called by NestJS after token is validated
   async validate(payload: any) {
     return {
       userId: payload.sub,
       email: payload.email,
-    }; // This will be available as req.user in your controller
+    };
   }
 }
