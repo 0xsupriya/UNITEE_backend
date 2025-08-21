@@ -21,14 +21,8 @@ export class UserProfile {
   @Column({ nullable: true })
   linkedin: string;
 
-  @Column("simple-array", { nullable: true })
-  techstack: string[];
-
   @Column({ nullable: true })
   profilepic: string;
-
-  @Column({ nullable: true })
-  experience: string;
 
   @OneToOne(() => userEntity, user => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
@@ -41,5 +35,25 @@ export class UserProfile {
   education: Education[];
 
   @OneToMany(() => Certificate, certificate => certificate.profile, { cascade: true })
-  certificates: Certificate[];
+  certificates: Certificate[];  
+
+   // filtering field
+  @Column({ nullable: true })
+  role: string;   // Example: "Frontend Developer"
+
+  @Column({ nullable: true })
+  experience: string; // Example: "Beginner" | "Intermediate" | "Expert"
+
+  @Column("simple-array", { nullable: true })
+  techstack: string[];  // Example" "react" | "nodejs"
+
+  // sorting field
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  lastActiveAt: Date;
+
+  @Column({ default: 0 })
+  connectionsCount: number;
 }
