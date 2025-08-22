@@ -27,4 +27,8 @@ export class CreateUserProfileDto {
   @IsOptional()
   @IsString()
   experience?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
 }

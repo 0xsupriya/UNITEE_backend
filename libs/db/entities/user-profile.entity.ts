@@ -22,7 +22,7 @@ export class UserProfile {
   linkedin: string;
 
   @Column({ nullable: true })
-  profilepic: string;
+  profilePic: string;
 
   @OneToOne(() => userEntity, user => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
