@@ -19,33 +19,33 @@ import { JwtGuard } from "src/auth/jwt.guard";
 @UseGuards(JwtGuard) // All routes require login
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
-@Post()
-async createProfile(@Req() req, @Body() dto: CreateUserProfileDto) {
-  const user = req.user; // logged-in user from JWT
-  return this.profileService.createProfile(user.id, dto);
-}
 
-@Get('me')
-async getMyProfile(@Req() req) {
-  const user = req.user;
-  return this.profileService.getProfileByUserId(user.id);
-}
+  @Post()
+  async createProfile(@Req() req, @Body() dto: CreateUserProfileDto) {
+    const user = req.user; // logged-in user from JWT
+    return this.profileService.createProfile(user.id, dto);
+  }
 
-@Get(':userId')
-async getProfileByUserId(@Param('userId') userId: string) {
-  return this.profileService.getProfileByUserId(userId);
-}
+  @Get("me")
+  async getMyProfile(@Req() req) {
+    const user = req.user;
+    return this.profileService.getMyProfile(user.id);
+  }
 
-@Put()
-async updateProfile(@Req() req, @Body() dto: UpdateUserProfileDto) {
-  const user = req.user;
-  return this.profileService.updateProfile(user.id, dto);
-}
+  @Get(":userId")
+  async getProfileByUserId(@Param("userId") userId: string) {
+    return this.profileService.getProfileByUserId(userId);
+  }
 
-@Delete()
-async deleteProfile(@Req() req) {
-  const user = req.user;
-  return this.profileService.deleteProfile(user.id);
-}
+  @Put()
+  async updateProfile(@Req() req, @Body() dto: UpdateUserProfileDto) {
+    const user = req.user;
+    return this.profileService.updateProfile(user.id, dto);
+  }
 
+  @Delete()
+  async deleteProfile(@Req() req) {
+    const user = req.user;
+    return this.profileService.deleteProfile(user.id);
+  }
 }

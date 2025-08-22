@@ -35,16 +35,22 @@ export class ProfileService {
   }
 
   async getMyProfile(userId: string) {
-    return this.profileRepo.findOne({
+    const profile = await this.profileRepo.findOne({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: ["user", "projects", "education", "certificates"],
     });
+
+    if (!profile) throw new NotFoundException("Profile not found");
+    return profile;
   }
 
   async getProfileByUserId(userId: string) {
-    return this.profileRepo.findOne({
+    const profile = await this.profileRepo.findOne({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: ["user", "projects", "education", "certificates"],
     });
+
+    if (!profile) throw new NotFoundException("Profile not found");
+    return profile;
   }
 }
