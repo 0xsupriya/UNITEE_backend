@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param, UseGuards, Req } from '@nestjs/common';
 import { CollabService } from './collab.service';
-import { CreateCollabDto } from './dto/create-collab.dto';
-import { UpdateCollabDto } from './dto/update-collab.dto';
+import { CreateCollabPostDto } from './dto/create-collab-post.dto';
+import { FilterCollabPostsDto } from './dto/filter-collab-post.dto';
+import { ApplyCollabDto } from './dto/apply-collab-post.dto';
+import { JwtGuard } from 'src/auth/jwt.guard';
 
 @Controller('collab')
 export class CollabController {
   constructor(private readonly collabService: CollabService) {}
 
-  @Post()
-  create(@Body() createCollabDto: CreateCollabDto) {
-    return this.collabService.create(createCollabDto);
+  // 1. Create a new collab post
+  @UseGuards(JwtGuard)
+  @Post('posts')
+  createPost(@Body() dto: CreateCollabPostDto, @Req() req) {
+    return this.collabService.createPost(dto, req.user);
   }
 
-  @Get()
-  findAll() {
-    return this.collabService.findAll();
+  // 2. Browse/filter posts
+  @Get('posts')
+  findPosts(@Query() filter: FilterCollabPostsDto) {
+    return this.collabService.findPosts(filter);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.collabService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCollabDto: UpdateCollabDto) {
-    return this.collabService.update(+id, updateCollabDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collabService.remove(+id);
+  // 3. Apply to a collab post
+  @UseGuards(JwtGuard)
+  @Post('posts/:id/apply')
+  applyToPost(@Param('id') postId: string, @Body() dto: ApplyCollabDto, @Req() req) {
+    return this.collabService.applyToPost(postId, dto, req.user);
   }
 }
