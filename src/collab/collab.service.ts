@@ -1,26 +1,64 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCollabDto } from './dto/create-collab.dto';
-import { UpdateCollabDto } from './dto/update-collab.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CollabPost, CollabType } from 'libs/db/entities/collab-post.entity';
+import { CollabApplication } from 'libs/db/entities/collab-application.entity';
+import { CreateCollabPostDto } from './dto/create-collab-post.dto';
+import { FilterCollabPostsDto } from './dto/filter-collab-post.dto';
+import { ApplyCollabDto } from './dto/apply-collab-post.dto';
+import { UserProfile } from 'libs/db/entities/user-profile.entity';
 
 @Injectable()
 export class CollabService {
-  create(createCollabDto: CreateCollabDto) {
-    return 'This action adds a new collab';
+  constructor(
+    @InjectRepository(CollabPost)
+    private collabPostRepo: Repository<CollabPost>,
+
+    @InjectRepository(CollabApplication)
+    private collabAppRepo: Repository<CollabApplication>,
+  ) {}
+
+  // 1️⃣ Create a collab post
+  async createPost(dto: CreateCollabPostDto, user: UserProfile) {
+    const post = this.collabPostRepo.create({
+      ...dto,
+      creator: user, // assign the user entity directly
+    });
+    return this.collabPostRepo.save(post);
   }
 
-  findAll() {
-    return `This action returns all collab`;
+  // 2️⃣ Browse / filter collab posts
+  async findPosts(filter: FilterCollabPostsDto) {
+    const query = this.collabPostRepo
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.creator', 'user') // match entity relation
+
+    // Filter by type/category
+    if (filter.category) {
+      query.andWhere('post.type = :category', { category: filter.category });
+    }
+
+    // Filter by tech stack (Postgres array overlap)
+    if (filter.techStacks && filter.techStacks.length > 0) {
+      query.andWhere('post.techStack && ARRAY[:...techStacks]', {
+        techStacks: filter.techStacks,
+      });
+    }
+
+    return query.getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} collab`;
-  }
+  // 3️⃣ Apply to a collab post
+  async applyToPost(postId: string, dto: ApplyCollabDto, user: UserProfile) {
+    const post = await this.collabPostRepo.findOne({ where: { id: postId } });
+    if (!post) throw new NotFoundException('Collab post not found');
 
-  update(id: number, updateCollabDto: UpdateCollabDto) {
-    return `This action updates a #${id} collab`;
-  }
+    const application = this.collabAppRepo.create({
+      message: dto.message,
+      applicant: user, // user entity
+      post,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} collab`;
+    return this.collabAppRepo.save(application);
   }
 }
