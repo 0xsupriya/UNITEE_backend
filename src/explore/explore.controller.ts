@@ -1,10 +1,10 @@
-import { Controller, Get, Query, Param, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, UseGuards, Req } from '@nestjs/common';
 import { ExploreService } from './explore.service';
 import { FilterUsersDto } from './dto/filter-users.dto';
 import { JwtGuard } from 'src/auth/jwt.guard';
 
 @Controller('explore')
-@UseGuards(JwtGuard) // protect all routes with JWT
+@UseGuards(JwtGuard)
 export class ExploreController {
   constructor(private readonly exploreService: ExploreService) {}
 

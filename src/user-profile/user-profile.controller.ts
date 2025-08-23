@@ -16,13 +16,13 @@ import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { JwtGuard } from "src/auth/jwt.guard";
 
 @Controller("profile")
-@UseGuards(JwtGuard) // All routes require login
+@UseGuards(JwtGuard)
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
   async createProfile(@Req() req, @Body() dto: CreateUserProfileDto) {
-    const user = req.user; // logged-in user from JWT
+    const user = req.user; 
     return this.profileService.createProfile(user.id, dto);
   }
 

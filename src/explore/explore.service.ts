@@ -15,7 +15,7 @@ export class ExploreService {
     private readonly connectionRepo: Repository<Connection>,
   ) {}
 
-  // 1. Filter & Sort Users
+// 1. Filter & Sort Users
   async filterUsers(filterDto: FilterUsersDto) {
     const { role, experience, location, techstack, sortBy } = filterDto;
 
@@ -43,14 +43,14 @@ export class ExploreService {
 
   }
 
-  // 2. View User Profile
+// 2. View User Profile
   async getUserProfile(id: string) {
     const profile = await this.userProfileRepo.findOne({ where: { id } });
     if (!profile) throw new NotFoundException('User profile not found');
     return profile;
   }
 
-  // 3. Send Connection Request
+// 3. Send Connection Request
   async sendConnection(senderId: string, receiverId: string) {
     if (senderId === receiverId) {
       throw new BadRequestException('You cannot connect with yourself');
