@@ -26,19 +26,21 @@ export class ExploreService {
     if (location) query.andWhere('userProfile.location = :location', { location });
     if (techstack) query.andWhere('userProfile.techstack && ARRAY[:...techstack]', { techstack });
 
-    // sorting
-    if (sortBy === 'most_active') {
-      query.orderBy('userProfile.lastActive', 'DESC');
+   // sorting
+  if (sortBy === 'most_active') {
+  query.orderBy('userProfile.lastActiveAt', 'DESC'); 
     } else if (sortBy === 'recently_joined') {
-      query.orderBy('userProfile.createdAt', 'DESC');
+    query.orderBy('userProfile.createdAt', 'DESC');
     } else if (sortBy === 'most_connections') {
-      query
-        .leftJoin('userProfile.connections', 'connection')
-        .groupBy('userProfile.id')
-        .orderBy('COUNT(connection.id)', 'DESC');
-    }
+    query
+    .leftJoin('userProfile.connections', 'connection')
+    .addSelect('COUNT(connection.id)', 'connectionCount') 
+    .groupBy('userProfile.id')
+    .orderBy('connectionCount', 'DESC');
+  }
 
     return await query.getMany();
+
   }
 
   // 2. View User Profile

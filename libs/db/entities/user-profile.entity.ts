@@ -73,4 +73,7 @@ export class UserProfile {
 
   @OneToMany(() => Connection, (connection) => connection.receiver)
   receivedConnections: Connection[];
+
+  @Column({ default: 0 })
+  connectionCount: number;
 }
