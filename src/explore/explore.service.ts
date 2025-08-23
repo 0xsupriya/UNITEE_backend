@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
-import { CreateExploreDto } from './dto/create-explore.dto';
-import { UpdateExploreDto } from './dto/update-explore.dto';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserProfile } from 'libs/db/entities/user-profile.entity';
+import { Connection } from 'libs/db/entities/connection.entity';
+import { FilterUsersDto } from './dto/filter-users.dto';
 
 @Injectable()
 export class ExploreService {
-  create(createExploreDto: CreateExploreDto) {
-    return 'This action adds a new explore';
+  constructor(
+    @InjectRepository(UserProfile)
+    private readonly userProfileRepo: Repository<UserProfile>,
+
+    @InjectRepository(Connection)
+    private readonly connectionRepo: Repository<Connection>,
+  ) {}
+
+  // 1. Filter & Sort Users
+  async filterUsers(filterDto: FilterUsersDto) {
+    const { role, experience, location, techstack, sortBy } = filterDto;
+
+    let query = this.userProfileRepo.createQueryBuilder('userProfile');
+
+    if (role) query.andWhere('userProfile.role = :role', { role });
+    if (experience) query.andWhere('userProfile.experience = :experience', { experience });
+    if (location) query.andWhere('userProfile.location = :location', { location });
+    if (techstack) query.andWhere('userProfile.techstack && ARRAY[:...techstack]', { techstack });
+
+    // sorting
+    if (sortBy === 'most_active') {
+      query.orderBy('userProfile.lastActive', 'DESC');
+    } else if (sortBy === 'recently_joined') {
+      query.orderBy('userProfile.createdAt', 'DESC');
+    } else if (sortBy === 'most_connections') {
+      query
+        .leftJoin('userProfile.connections', 'connection')
+        .groupBy('userProfile.id')
+        .orderBy('COUNT(connection.id)', 'DESC');
+    }
+
+    return await query.getMany();
   }
 
-  findAll() {
-    return `This action returns all explore`;
+  // 2. View User Profile
+  async getUserProfile(id: string) {
+    const profile = await this.userProfileRepo.findOne({ where: { id } });
+    if (!profile) throw new NotFoundException('User profile not found');
+    return profile;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} explore`;
-  }
+  // 3. Send Connection Request
+  async sendConnection(senderId: string, receiverId: string) {
+    if (senderId === receiverId) {
+      throw new BadRequestException('You cannot connect with yourself');
+    }
 
-  update(id: number, updateExploreDto: UpdateExploreDto) {
-    return `This action updates a #${id} explore`;
-  }
+    const existing = await this.connectionRepo.findOne({
+      where: [
+        { requester: { id: senderId }, receiver: { id: receiverId } },
+        { requester: { id: receiverId }, receiver: { id: senderId } },
+      ],
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} explore`;
+    if (existing) {
+      throw new BadRequestException('Connection request already exists');
+    }
+
+    const connection = this.connectionRepo.create({
+      requester: { id: senderId },
+      receiver: { id: receiverId },
+      status: 'pending',
+    });
+
+    return await this.connectionRepo.save(connection);
   }
 }

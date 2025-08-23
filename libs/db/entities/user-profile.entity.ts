@@ -57,6 +57,9 @@ export class UserProfile {
   @Column("text", { array: true, nullable: true })
   techstack: string[];  // Example: ["react", "nodejs"]
 
+  @Column("text", {array: true, nullable: true})
+  location: String[];
+
   // sorting fields
   @CreateDateColumn()
   createdAt: Date;

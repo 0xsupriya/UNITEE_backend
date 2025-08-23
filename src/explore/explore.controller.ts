@@ -1,34 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { ExploreService } from './explore.service';
-import { CreateExploreDto } from './dto/create-explore.dto';
-import { UpdateExploreDto } from './dto/update-explore.dto';
+import { FilterUsersDto } from './dto/filter-users.dto';
+import { JwtGuard } from 'src/auth/jwt.guard';
 
 @Controller('explore')
+@UseGuards(JwtGuard) // protect all routes with JWT
 export class ExploreController {
   constructor(private readonly exploreService: ExploreService) {}
 
-  @Post()
-  create(@Body() createExploreDto: CreateExploreDto) {
-    return this.exploreService.create(createExploreDto);
+  // 1. Filter & Sort users
+  @Get('users')
+  async filterUsers(@Query() filterDto: FilterUsersDto) {
+    return this.exploreService.filterUsers(filterDto);
   }
 
-  @Get()
-  findAll() {
-    return this.exploreService.findAll();
+  // 2. View a user profile by ID
+  @Get('users/:id')
+  async getUserProfile(@Param('id') id: string) {
+    return this.exploreService.getUserProfile(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.exploreService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExploreDto: UpdateExploreDto) {
-    return this.exploreService.update(+id, updateExploreDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.exploreService.remove(+id);
+  // 3. Send connection request
+  @Post('connections/:receiverId')
+  async sendConnection(@Param('receiverId') receiverId: string, @Req() req) {
+    const senderId = req.user.id; // comes from JWT
+    return this.exploreService.sendConnection(senderId, receiverId);
   }
 }

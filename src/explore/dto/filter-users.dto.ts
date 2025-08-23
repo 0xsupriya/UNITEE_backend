@@ -10,6 +10,10 @@ export class FilterUsersDto {
   experience?: string; // e.g., "Beginner" | "Intermediate" | "Expert"
 
   @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
   @IsArray()
   techstack?: string[];  // e.g., ["react", "nodejs"]
 
