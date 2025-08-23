@@ -1,6 +1,7 @@
 import { registerAs } from "@nestjs/config";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { Certificate } from "libs/db/entities/certificate.entity";
+import { Connection } from "libs/db/entities/connection.entity";
 import { Education } from "libs/db/entities/education.entity";
 import { Project } from "libs/db/entities/project.entity";
 import { UserProfile } from "libs/db/entities/user-profile.entity";
@@ -11,7 +12,7 @@ export const databaseConfig = registerAs(
   (): TypeOrmModuleOptions => ({
     type: 'postgres',
     url: process.env.DATABASE_URL,   // will be loaded by ConfigModule
-    entities: [userEntity,UserProfile,Education,Project,Certificate],
+    entities: [userEntity,UserProfile,Education,Project,Certificate,Connection],
     synchronize: true,
   }),
 );
