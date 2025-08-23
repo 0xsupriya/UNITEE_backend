@@ -1,8 +1,18 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { userEntity } from "./user.entity";
 import { Education } from "./education.entity";
 import { Project } from "./project.entity";
 import { Certificate } from "./certificate.entity";
+import { Connection } from "./connection.entity";
 
 @Entity('user_profile')
 export class UserProfile {
@@ -35,25 +45,29 @@ export class UserProfile {
   education: Education[];
 
   @OneToMany(() => Certificate, certificate => certificate.profile, { cascade: true })
-  certificates: Certificate[];  
+  certificates: Certificate[];
 
-   // filtering field
+  // filtering fields
   @Column({ nullable: true })
   role: string;   // Example: "Frontend Developer"
 
   @Column({ nullable: true })
   experience: string; // Example: "Beginner" | "Intermediate" | "Expert"
 
-  @Column("simple-array", { nullable: true })
-  techstack: string[];  // Example" "react" | "nodejs"
+  @Column("text", { array: true, nullable: true })
+  techstack: string[];  // Example: ["react", "nodejs"]
 
-  // sorting field
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  // sorting fields
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn()
   lastActiveAt: Date;
 
-  @Column({ default: 0 })
-  connectionsCount: number;
+  // connections
+  @OneToMany(() => Connection, (connection) => connection.requester)
+  sentConnections: Connection[];
+
+  @OneToMany(() => Connection, (connection) => connection.receiver)
+  receivedConnections: Connection[];
 }
