@@ -32,13 +32,15 @@ export class CollabPost {
   type: CollabType;
 
   @Column('simple-array')
-  techStack: string[]; // e.g. ["React", "Node.js"]
+  techStack: string[]; // ["React", "Node.js", ...]
 
+  // Relation to the creator
   @ManyToOne(() => UserProfile, (user) => user.collabPosts, {
     onDelete: 'CASCADE',
   })
   creator: UserProfile;
 
+  // Relation to applications
   @OneToMany(() => CollabApplication, (application) => application.post, {
     cascade: true,
   })
