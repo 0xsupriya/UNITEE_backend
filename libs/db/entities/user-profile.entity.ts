@@ -13,6 +13,8 @@ import { Education } from "./education.entity";
 import { Project } from "./project.entity";
 import { Certificate } from "./certificate.entity";
 import { Connection } from "./connection.entity";
+import { CollabPost } from "./collab-post.entity";
+import { CollabApplication } from "./collab-application.entity";
 
 @Entity('user_profile')
 export class UserProfile {
@@ -76,4 +78,11 @@ export class UserProfile {
 
   @Column({ default: 0 })
   connectionCount: number;
+
+  // relationship with collab 
+  @OneToMany(() => CollabPost, (post) => post.creator)
+  collabPosts: CollabPost[];
+
+  @OneToMany(() => CollabApplication, (app) => app.applicant)
+  applications: CollabApplication[];
 }
