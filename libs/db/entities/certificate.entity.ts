@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserProfile } from "./user-profile.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserProfile } from './user-profile.entity';
 
 @Entity('certificates')
 export class Certificate {
@@ -15,6 +15,8 @@ export class Certificate {
   @Column({ nullable: true })
   year: string;
 
-  @ManyToOne(() => UserProfile, profile => profile.certificates, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserProfile, (profile) => profile.certificates, {
+    onDelete: 'CASCADE',
+  })
   profile: UserProfile;
 }

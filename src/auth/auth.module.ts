@@ -6,11 +6,11 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { userEntity } from '../../libs/db/entities/user.entity';
+import { UserEntity } from '../../libs/db/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([userEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

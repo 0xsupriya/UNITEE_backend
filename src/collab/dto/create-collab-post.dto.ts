@@ -5,7 +5,7 @@ export class CreateCollabPostDto {
   title: string;
 
   @IsString()
-  category: string;   // e.g., "Hackathon", "Startup", "Open Source"
+  category: string; // e.g., "Hackathon", "Startup", "Open Source"
 
   @IsOptional()
   @IsString()

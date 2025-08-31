@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CollabPost, CollabType } from 'libs/db/entities/collab-post.entity';
+import { CollabPost } from 'libs/db/entities/collab-post.entity';
 import { CollabApplication } from 'libs/db/entities/collab-application.entity';
 import { CreateCollabPostDto } from './dto/create-collab-post.dto';
 import { FilterCollabPostsDto } from './dto/filter-collab-post.dto';
@@ -31,7 +31,7 @@ export class CollabService {
   async findPosts(filter: FilterCollabPostsDto) {
     const query = this.collabPostRepo
       .createQueryBuilder('post')
-      .leftJoinAndSelect('post.creator', 'user') // match entity relation
+      .leftJoinAndSelect('post.creator', 'user'); // match entity relation
 
     // Filter by type/category
     if (filter.category) {

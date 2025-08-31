@@ -3,7 +3,7 @@ import { IsOptional, IsString, IsArray, IsIn } from 'class-validator';
 export class FilterUsersDto {
   @IsOptional()
   @IsString()
-  role?: string;   // e.g., "Frontend Developer"
+  role?: string; // e.g., "Frontend Developer"
 
   @IsOptional()
   @IsString()
@@ -15,9 +15,9 @@ export class FilterUsersDto {
 
   @IsOptional()
   @IsArray()
-  techstack?: string[];  // e.g., ["react", "nodejs"]
+  techstack?: string[]; // e.g., ["react", "nodejs"]
 
   @IsOptional()
-  @IsIn(["most_active", "recently_joined", "most_connections"])
+  @IsIn(['most_active', 'recently_joined', 'most_connections'])
   sortBy?: string;
 }

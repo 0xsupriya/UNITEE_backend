@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsArray } from "class-validator";
+import { IsOptional, IsString, IsArray } from 'class-validator';
 
 export class GetUserProfilesDto {
   @IsOptional()
@@ -15,5 +15,5 @@ export class GetUserProfilesDto {
 
   @IsOptional()
   @IsString()
-  sort?: "recent" | "most-active" | "most-connections";
+  sort?: 'recent' | 'most-active' | 'most-connections';
 }

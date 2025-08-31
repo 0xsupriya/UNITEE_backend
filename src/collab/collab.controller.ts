@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Get, Query, Param, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { CollabService } from './collab.service';
 import { CreateCollabPostDto } from './dto/create-collab-post.dto';
 import { FilterCollabPostsDto } from './dto/filter-collab-post.dto';
@@ -25,7 +34,11 @@ export class CollabController {
   // 3. Apply to a collab post
   @UseGuards(JwtGuard)
   @Post('posts/:id/apply')
-  applyToPost(@Param('id') postId: string, @Body() dto: ApplyCollabDto, @Req() req) {
+  applyToPost(
+    @Param('id') postId: string,
+    @Body() dto: ApplyCollabDto,
+    @Req() req,
+  ) {
     return this.collabService.applyToPost(postId, dto, req.user);
   }
 }

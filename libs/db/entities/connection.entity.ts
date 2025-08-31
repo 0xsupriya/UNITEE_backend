@@ -1,5 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn } from "typeorm";
-import { UserProfile } from "./user-profile.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
+import { UserProfile } from './user-profile.entity';
 
 @Entity('connections')
 export class Connection {
@@ -7,11 +13,15 @@ export class Connection {
   id: string;
 
   // who sent the request
-  @ManyToOne(() => UserProfile, (user) => user.sentConnections, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserProfile, (user) => user.sentConnections, {
+    onDelete: 'CASCADE',
+  })
   requester: UserProfile;
 
   // who received the request
-  @ManyToOne(() => UserProfile, (user) => user.receivedConnections, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserProfile, (user) => user.receivedConnections, {
+    onDelete: 'CASCADE',
+  })
   receiver: UserProfile;
 
   @Column({

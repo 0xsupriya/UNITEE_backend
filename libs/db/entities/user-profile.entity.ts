@@ -7,14 +7,14 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { userEntity } from "./user.entity";
-import { Education } from "./education.entity";
-import { Project } from "./project.entity";
-import { Certificate } from "./certificate.entity";
-import { Connection } from "./connection.entity";
-import { CollabPost } from "./collab-post.entity";
-import { CollabApplication } from "./collab-application.entity";
+} from 'typeorm';
+import { UserEntity } from './user.entity';
+import { Education } from './education.entity';
+import { Project } from './project.entity';
+import { Certificate } from './certificate.entity';
+import { Connection } from './connection.entity';
+import { CollabPost } from './collab-post.entity';
+import { CollabApplication } from './collab-application.entity';
 
 @Entity('user_profile')
 export class UserProfile {
@@ -36,31 +36,35 @@ export class UserProfile {
   @Column({ nullable: true })
   profilePic: string;
 
-  @OneToOne(() => userEntity, user => user.profile, { onDelete: 'CASCADE' })
+  @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
-  user: userEntity;
+  user: UserEntity;
 
-  @OneToMany(() => Project, project => project.profile, { cascade: true })
+  @OneToMany(() => Project, (project) => project.profile, { cascade: true })
   projects: Project[];
 
-  @OneToMany(() => Education, education => education.profile, { cascade: true })
+  @OneToMany(() => Education, (education) => education.profile, {
+    cascade: true,
+  })
   education: Education[];
 
-  @OneToMany(() => Certificate, certificate => certificate.profile, { cascade: true })
+  @OneToMany(() => Certificate, (certificate) => certificate.profile, {
+    cascade: true,
+  })
   certificates: Certificate[];
 
   // filtering fields
   @Column({ nullable: true })
-  role: string;   // Example: "Frontend Developer"
+  role: string; // Example: "Frontend Developer"
 
   @Column({ nullable: true })
   experience: string; // Example: "Beginner" | "Intermediate" | "Expert"
 
-  @Column("text", { array: true, nullable: true })
-  techstack: string[];  // Example: ["react", "nodejs"]
+  @Column('text', { array: true, nullable: true })
+  techstack: string[]; // Example: ["react", "nodejs"]
 
-  @Column("text", {array: true, nullable: true})
-  location: String[];
+  @Column('text', { array: true, nullable: true })
+  location: string[];
 
   // sorting fields
   @CreateDateColumn()
@@ -79,7 +83,7 @@ export class UserProfile {
   @Column({ default: 0 })
   connectionCount: number;
 
-  // relationship with collab 
+  // relationship with collab
   @OneToMany(() => CollabPost, (post) => post.creator)
   collabPosts: CollabPost[];
 

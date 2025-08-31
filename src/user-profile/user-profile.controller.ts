@@ -8,32 +8,32 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { ProfileService } from "./user-profile.service";
-import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
-import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
-import { JwtGuard } from "src/auth/jwt.guard";
+import { ProfileService } from './user-profile.service';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { JwtGuard } from 'src/auth/jwt.guard';
 
-@Controller("profile")
+@Controller('profile')
 @UseGuards(JwtGuard)
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
   async createProfile(@Req() req, @Body() dto: CreateUserProfileDto) {
-    const user = req.user; 
+    const user = req.user;
     return this.profileService.createProfile(user.id, dto);
   }
 
-  @Get("me")
+  @Get('me')
   async getMyProfile(@Req() req) {
     const user = req.user;
     return this.profileService.getMyProfile(user.id);
   }
 
-  @Get(":userId")
-  async getProfileByUserId(@Param("userId") userId: string) {
+  @Get(':userId')
+  async getProfileByUserId(@Param('userId') userId: string) {
     return this.profileService.getProfileByUserId(userId);
   }
 

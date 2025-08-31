@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from 'libs/db/entities/user-profile.entity';
@@ -15,42 +19,46 @@ export class ExploreService {
     private readonly connectionRepo: Repository<Connection>,
   ) {}
 
-// 1. Filter & Sort Users
+  // 1. Filter & Sort Users
   async filterUsers(filterDto: FilterUsersDto) {
     const { role, experience, location, techstack, sortBy } = filterDto;
 
-    let query = this.userProfileRepo.createQueryBuilder('userProfile');
+    const query = this.userProfileRepo.createQueryBuilder('userProfile');
 
     if (role) query.andWhere('userProfile.role = :role', { role });
-    if (experience) query.andWhere('userProfile.experience = :experience', { experience });
-    if (location) query.andWhere('userProfile.location = :location', { location });
-    if (techstack) query.andWhere('userProfile.techstack && ARRAY[:...techstack]', { techstack });
+    if (experience)
+      query.andWhere('userProfile.experience = :experience', { experience });
+    if (location)
+      query.andWhere('userProfile.location = :location', { location });
+    if (techstack)
+      query.andWhere('userProfile.techstack && ARRAY[:...techstack]', {
+        techstack,
+      });
 
-   // sorting
-  if (sortBy === 'most_active') {
-  query.orderBy('userProfile.lastActiveAt', 'DESC'); 
+    // sorting
+    if (sortBy === 'most_active') {
+      query.orderBy('userProfile.lastActiveAt', 'DESC');
     } else if (sortBy === 'recently_joined') {
-    query.orderBy('userProfile.createdAt', 'DESC');
+      query.orderBy('userProfile.createdAt', 'DESC');
     } else if (sortBy === 'most_connections') {
-    query
-    .leftJoin('userProfile.connections', 'connection')
-    .addSelect('COUNT(connection.id)', 'connectionCount') 
-    .groupBy('userProfile.id')
-    .orderBy('connectionCount', 'DESC');
-  }
+      query
+        .leftJoin('userProfile.connections', 'connection')
+        .addSelect('COUNT(connection.id)', 'connectionCount')
+        .groupBy('userProfile.id')
+        .orderBy('connectionCount', 'DESC');
+    }
 
     return await query.getMany();
-
   }
 
-// 2. View User Profile
+  // 2. View User Profile
   async getUserProfile(id: string) {
     const profile = await this.userProfileRepo.findOne({ where: { id } });
     if (!profile) throw new NotFoundException('User profile not found');
     return profile;
   }
 
-// 3. Send Connection Request
+  // 3. Send Connection Request
   async sendConnection(senderId: string, receiverId: string) {
     if (senderId === receiverId) {
       throw new BadRequestException('You cannot connect with yourself');

@@ -10,10 +10,10 @@ import { CoreModule } from 'libs/common/src/core/core.module';
 @Module({
   imports: [
     CoreModule,
-    AuthModule, 
-    ExploreModule, 
-    CollabModule, 
-    UserProfileModule
+    AuthModule,
+    ExploreModule,
+    CollabModule,
+    UserProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

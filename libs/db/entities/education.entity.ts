@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserProfile } from "./user-profile.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserProfile } from './user-profile.entity';
 
 @Entity('education')
 export class Education {
@@ -15,6 +15,8 @@ export class Education {
   @Column()
   year: string;
 
-  @ManyToOne(() => UserProfile, profile => profile.education, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserProfile, (profile) => profile.education, {
+    onDelete: 'CASCADE',
+  })
   profile: UserProfile;
 }
