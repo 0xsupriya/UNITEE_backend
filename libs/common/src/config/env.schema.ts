@@ -5,9 +5,7 @@ export const envSchema = z.object({
   JWT_SECRET: z
     .string()
     .min(32, 'JWT_SECRET must be at least 32 characters long'),
-  NODE_ENV: z
-    .enum(['development', 'production'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'production']).default('development'),
   FRONTEND_URL: z.string().optional(),
 });
 export type envSchema = z.infer<typeof envSchema>;
