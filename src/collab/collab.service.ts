@@ -18,7 +18,7 @@ export class CollabService {
     private collabAppRepo: Repository<CollabApplication>,
   ) {}
 
-  // 1️⃣ Create a collab post
+  // 1. Create a collab post
   async createPost(dto: CreateCollabPostDto, user: UserProfile) {
     const post = this.collabPostRepo.create({
       ...dto,
@@ -27,7 +27,7 @@ export class CollabService {
     return this.collabPostRepo.save(post);
   }
 
-  // 2️⃣ Browse / filter collab posts
+  // 2. Browse / filter collab posts
   async findPosts(filter: FilterCollabPostsDto) {
     const query = this.collabPostRepo
       .createQueryBuilder('post')
@@ -48,7 +48,7 @@ export class CollabService {
     return query.getMany();
   }
 
-  // 3️⃣ Apply to a collab post
+  // 3. Apply to a collab post
   async applyToPost(postId: string, dto: ApplyCollabDto, user: UserProfile) {
     const post = await this.collabPostRepo.findOne({ where: { id: postId } });
     if (!post) throw new NotFoundException('Collab post not found');
